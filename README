@@ -1,0 +1,12 @@
+ChasingCubes
+
+This is my first Linux game. I'm not an expert developer, this is just an experiment.
+
+
+THE CONCEPT
+
+There was no concept. I just started to learn how SDL and OpenGL works. I tryed to draw a cube,
+I tryed to move it with arrows, I tryed to draw several cubes. The last step was writing a 
+simple artificial intelligence.
+
+All advices and suggestions are welcome.
