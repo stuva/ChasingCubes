@@ -86,6 +86,11 @@ void create_fruit() {
 }*/
 
 int main( int argc, char *argv[] ) {
+	if(argc == 2 && !strcmp("-v", argv[1])) {
+		std::cout << "ChasingCubes 20120108-alpha, Copyright (C) 2012 Michele Cucca, see LICENSE for details\n";
+		return 0;
+	}
+
 	srand48( time( NULL ) );
 
 	bool quit = false;

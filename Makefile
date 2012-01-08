@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp  -lSDL -lGL
+	g++ -lSDL -lGL main.cpp world.cpp pg.cpp enemy.cpp
