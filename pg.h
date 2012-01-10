@@ -25,10 +25,12 @@ class Pg {
 		// asse di rotazione
 		int axis[3];
 		Uint32 t;
+		Uint32 last_trap;
 	public:
 		float speed;
+		int ntrap;
 		Pg();
-		void handle_input( PosMatrix &posmatrix, bool &you_lose);
+		void handle_input( SDL_Event &event, PosMatrix &posmatrix, bool &you_lose, int &last_x, int &last_y, std::vector <Trap*> &trap );
 		void move( PosMatrix &posmatrix);
 		void show( int &last_x, int &last_y );
 };

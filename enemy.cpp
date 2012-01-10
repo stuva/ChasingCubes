@@ -18,10 +18,12 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_opengl.h"
-#include "vector"
+#include <vector>
+#include <iostream>
 
 #include "define.h"
 #include "world.h"
+#include "weapons.h"
 #include "enemy.h"
 
 Enemy::Enemy( PosMatrix &posmatrix ) {
@@ -31,7 +33,7 @@ Enemy::Enemy( PosMatrix &posmatrix ) {
 	} while ( ! posmatrix.is_free( x, y ) );
 	x *= L;
 	y *= L;
-	speed = 0.5;
+	speed = 0.49;
 	moving = 'n';
 	angle = 0;
 	axis[0] = axis[1] = axis[2] = 0;
@@ -228,4 +230,14 @@ void enemy_show( std::vector <Enemy*> &enemy ) {
 	}
 }
 
-
+void trap_check( PosMatrix &posmatrix, std::vector <Trap*> &trap, std::vector <Enemy*> &enemy ) {
+	for ( int i = 0; i < trap.size(); i++ ) {
+		for ( int j = 0; j < enemy.size(); j++ ) {
+			if ( trap[i]->x == enemy[j]->x && trap[i]->y == enemy[j]->y ) {
+				posmatrix.set_free( enemy[j]->x, enemy[j]->y );
+				trap.erase( trap.begin() + i );
+				enemy.erase( enemy.begin() + j );
+			}
+		}
+	}
+}

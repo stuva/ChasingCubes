@@ -18,8 +18,11 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_opengl.h"
+#include <iostream>
+#include <vector>
 #include "define.h"
 #include "world.h"
+#include "weapons.h"
 #include "pg.h"
 
 Pg::Pg() {
@@ -28,9 +31,10 @@ Pg::Pg() {
 	moving = 'n';
 	angle = 0;
 	axis[0] = axis[1] = axis[2] = 0;
+	ntrap = 0;
 }
 
-void Pg::handle_input( PosMatrix &posmatrix, bool &you_lose ) {
+void Pg::handle_input( SDL_Event &event, PosMatrix &posmatrix, bool &you_lose, int &last_x, int &last_y, std::vector <Trap*> &trap ) {
 	Uint8 *keystates = SDL_GetKeyState( NULL );
 	if ( moving == 'n' ) { 
 		if ( ( keystates[ SDLK_UP ] ) || (  keystates[SDLK_w] ) ) {
@@ -75,6 +79,13 @@ void Pg::handle_input( PosMatrix &posmatrix, bool &you_lose ) {
 					axis[2] = 0;
 				} else you_lose = true;
 			}
+		}
+	}
+	if ( event.type == SDL_KEYDOWN  && ( SDL_GetTicks() - last_trap ) > 100 ) {
+		if ( event.key.keysym.sym == SDLK_SPACE && ntrap > 0 ) {
+			ntrap--;
+			last_trap = SDL_GetTicks();
+			trap.push_back( new Trap( last_x, last_y ) );
 		}
 	}
 }

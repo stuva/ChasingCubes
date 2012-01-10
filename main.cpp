@@ -25,21 +25,10 @@
 
 #include "define.h"
 #include "world.h"
+#include "weapons.h"
 #include "pg.h"
 #include "enemy.h"
-
-/*class Fruit {
-	public:
-		Fruit();
-		float x, y;
-		int type; // 1: speed; 2: slow;
-		Uint32 birth;
-		void check_life();
-		void show();
-};
-
-std::vector <Fruit*> fruit;
-PosMatrix fruitmatrix;*/
+#include "fruit.h"
 
 void init() {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -67,27 +56,9 @@ int level( unsigned int &score ){
 	return score/200 + 1;
 }
 
-/*Fruit::Fruit() {
-	birth = SDL_GetKeyState();
-}
-
-void create_fruit() {
-	if ( fruit.size() == 0 ) {
-		fruit.push_back( new Fruit );
-	} else {
-		if ( ( SDL_GetTicks() - fruit.back()->birth ) > 10000 ) {
-			fruit.push_back( new Fruit );
-			fruit.push_back( new Fruit );
-			fruit.push_back( new Fruit );
-			fruit.push_back( new Fruit );
-			fruit.push_back( new Fruit );
-		}
-	}
-}*/
-
 int main( int argc, char *argv[] ) {
 	if(argc == 2 && !strcmp("-v", argv[1])) {
-		std::cout << "ChasingCubes 20120108-alpha, Copyright (C) 2012 Michele Cucca, see LICENSE for details\n";
+		std::cout << "ChasingCubes 20120110-alpha, Copyright (C) 2012 Michele Cucca, see LICENSE for details\n";
 		return 0;
 	}
 
@@ -108,36 +79,45 @@ int main( int argc, char *argv[] ) {
 
 	PosMatrix posmatrix;
 	Pg pg;
+	std::vector <Trap*> trap;
 	std::vector <Enemy*> enemy;
+	Fruit fruit;
 
 	init();
 
 	// main loop
 	while ( ( quit == false ) && ( ! you_lose ) ) {
 		create_enemy( posmatrix, enemy );
+
 		/////////////// EVENTI
 		while( SDL_PollEvent( &event ) ) {
 			if ( event.type == SDL_QUIT ) {
 				quit = true;
 			}
 		}
-		pg.handle_input( posmatrix, you_lose );
+		pg.handle_input( event, posmatrix, you_lose, last_x, last_y, trap );
 
 		/////////////// LOGICA
 		enemy_follow( posmatrix, enemy, last_x, last_y  );
+		fruit.check( last_x, last_y, score, enemy.size(), pg );
 
 		/////////////// MOVIMENTO 
 		pg.move( posmatrix );
 		enemy_move( posmatrix, enemy );
+		trap_check( posmatrix, trap, enemy );
 
 		/////////////// RENDERING
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		glPushMatrix();
-			glRotatef( -(float)last_x/100, 0, 0, 5 );
-			glRotatef( (float)last_y/100, 1, 0, 0 );
+			float phi = -(float)last_x/100;
+			float theta = (float)last_y/100;
+			glRotatef( phi, 0, 0, 5 );
+			glRotatef( theta, 1, 0, 0 );
 			ground();
 			pg.show( last_x, last_y );
 			enemy_show( enemy );
+			trap_show( trap );
+			fruit.show();
 //			posmatrix.show(); // mostra le posizioni occupate (diagnostica)
 		glPopMatrix();
 		SDL_GL_SwapBuffers();

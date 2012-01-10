@@ -1,5 +1,5 @@
 /*
- * enemy.h
+ * fruit.cpp
  * Copyright (C) Michele Cucca 2012 <miche.cucca@gmail.com>
  * 
  * ChasingCubes is free software: you can redistribute it and/or modify it
@@ -16,28 +16,14 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Enemy {
-	private: 
+class Fruit {
+	private:
 		float angle;
-		char moving;
-		int axis[3];
-		Uint32 t;
-	public:
-		float speed;
-		float x, y;
-		Enemy( PosMatrix &posmatrix );
 		Uint32 birth;
-		void follow( PosMatrix &posmatrix, std::vector <Enemy*> &enemy, int &last_x, int &last_y );
-		void move( PosMatrix &posmatrix );
+	public:
+		Fruit();
+		float x, y;
+		void check( int &last_x, int &last_y, unsigned int &score, int nenemies, Pg &pg );
 		void show();
 };
 
-void create_enemy( PosMatrix &posmatrix, std::vector <Enemy*> &enemy );
-
-void enemy_follow( PosMatrix &posmatrix, std::vector <Enemy*> &enemy, int last_x, int last_y );
-
-void enemy_move( PosMatrix &posmatrix, std::vector <Enemy*> &enemy );
-
-void enemy_show( std::vector <Enemy*> &enemy );
-
-void trap_check( PosMatrix &posmatrix, std::vector <Trap*> &trap, std::vector <Enemy*> &enemy );
